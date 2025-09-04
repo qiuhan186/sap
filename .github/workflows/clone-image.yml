@@ -1,10 +1,8 @@
 name: Clone Docker Image to GHCR
-
 on:
+  workflow_dispatch:
   push:
     branches: [ main ]
-  workflow_dispatch: # 允许手动触发
-
 jobs:
   clone-image:
     runs-on: ubuntu-latest
@@ -15,12 +13,8 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GHCR_TOKEN }}
-
-    - name: Pull and tag image
+    - name: Pull, tag, and push image
       run: |
         docker pull ghcr.io/uncleluogithub/mous:latest
         docker tag ghcr.io/uncleluogithub/mous:latest ghcr.io/${{ github.repository }}/mous:latest
-
-    - name: Push image to GHCR
-      run: |
         docker push ghcr.io/${{ github.repository }}/mous:latest
